@@ -1,14 +1,21 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
 import Auth from './pages/Auth';
-import Watchlists from './pages/Watchlists';
+import Dashboard from './pages/Dashboard';
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Auth />} />
-        <Route path="/watchlists" element={<Watchlists />} />
+        {/* Page d'accueil par défaut */}
+        <Route path="/" element={<Home />} />
+        
+        {/* Page de connexion / inscription */}
+        <Route path="/auth" element={<Auth />} />
+        
+        {/* Tableau de bord de l'utilisateur, accessible seulement si connecté */}
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );

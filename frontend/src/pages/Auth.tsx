@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Auth: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isLogin, setIsLogin] = useState<boolean>(true);
+  const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
 
   const handleAuth = async () => {
     const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
@@ -13,19 +16,21 @@ const Auth: React.FC = () => {
       if (isLogin) {
         localStorage.setItem('token', response.data.token);
         alert('Connexion réussie.');
+        navigate('/dashboard'); // Redirige vers le tableau de bord après connexion
       } else {
-        alert('Inscription réussie.');
+        alert('Inscription réussie. Vous pouvez maintenant vous connecter.');
         setIsLogin(true);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      alert('Une erreur est survenue.');
+      setError(error.response?.data?.error || 'Une erreur est survenue.');
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-2xl font-bold mb-4">{isLogin ? 'Connexion' : "Inscription"}</h1>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
       <input
         className="mb-2 p-2 border border-gray-300 rounded"
         type="email"
@@ -48,7 +53,10 @@ const Auth: React.FC = () => {
       </button>
       <p
         className="mt-4 text-sm text-gray-600 cursor-pointer"
-        onClick={() => setIsLogin(!isLogin)}
+        onClick={() => {
+          setError(null);
+          setIsLogin(!isLogin);
+        }}
       >
         {isLogin ? "Pas encore inscrit ? S'inscrire" : 'Déjà inscrit ? Se connecter'}
       </p>
