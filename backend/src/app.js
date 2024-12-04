@@ -7,6 +7,10 @@ const app = express();
 const authMiddleware = require('./middleware/authMiddleware');
 app.use('/api/watchlists', authMiddleware, require('./routes/watchlistRoutes'));
 
+const { searchAniList } = require('./controllers/apiController');
+app.get('/api/search/anime', searchAniList);
+
+
 app.use(cors());
 app.use(express.json());
 
