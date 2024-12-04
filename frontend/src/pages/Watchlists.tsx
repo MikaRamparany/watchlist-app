@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 interface Watchlist {
   id: number;
@@ -63,7 +64,10 @@ const Watchlists: React.FC = () => {
       <ul>
         {watchlists.map((watchlist) => (
           <li key={watchlist.id} className="p-2 border-b">
-            {watchlist.name} - {watchlist.status}
+            {watchlist.name} - {watchlist.status}{' '}
+            <Link to={`/watchlist/${watchlist.id}`}>
+              <button className="text-blue-500">Voir les éléments</button>
+            </Link>
           </li>
         ))}
       </ul>
