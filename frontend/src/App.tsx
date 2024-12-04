@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
+import Watchlists from './pages/Watchlists';
+import WatchlistDetails from './pages/WatchlistDetails';
 
 const App: React.FC = () => {
   return (
@@ -16,6 +18,9 @@ const App: React.FC = () => {
         
         {/* Tableau de bord de l'utilisateur, accessible seulement si connecté */}
         <Route path="/dashboard" element={<Dashboard />} />
+
+        <Route path="/watchlists" element={<Watchlists />} />
+        <Route path="/watchlist/:id" element={<WatchlistDetails />} />
       </Routes>
     </Router>
   );
