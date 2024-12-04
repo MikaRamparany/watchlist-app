@@ -37,6 +37,12 @@ const loginUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+  // Avant d'insérer l'utilisateur, vérifier si l'email existe déjà
+const checkUser = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+if (checkUser.rows.length > 0) {
+  return res.status(400).json({ error: 'Cet email est déjà utilisé.' });
+}
+
 };
 
 module.exports = { registerUser, loginUser };
