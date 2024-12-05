@@ -1,9 +1,10 @@
 const pool = require('../config/db');
+const authenticateToken = require('../middleware/authenticateToken'); // Import du middleware
 
 // Créer une watchlist
 const createWatchlist = async (req, res) => {
   const { name, status } = req.body;
-  const userId = req.userId; // Ajouter un middleware d'authentification plus tard
+  const userId = req.userId; // Utilise l'ID utilisateur extrait du token
 
   try {
     const result = await pool.query(
@@ -19,7 +20,7 @@ const createWatchlist = async (req, res) => {
 
 // Récupérer toutes les watchlists d'un utilisateur
 const getWatchlists = async (req, res) => {
-  const userId = req.userId;
+  const userId = req.userId; // Utilise l'ID utilisateur extrait du token
 
   try {
     const result = await pool.query(
@@ -41,7 +42,7 @@ const addItemToWatchlist = async (req, res) => {
   try {
     const result = await pool.query(
       'INSERT INTO watchlist_items (watchlist_id, title, type, status) VALUES ($1, $2, $3, $4) RETURNING *',
-      [watchlistId, title, type, status || 'À voir']
+      [watchlistId, title, type, status || 'À ajouter']
     );
 
     res.status(201).json(result.rows[0]);
