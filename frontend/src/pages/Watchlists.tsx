@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface Watchlist {
   id: number;
@@ -11,7 +11,19 @@ interface Watchlist {
 const Watchlists: React.FC = () => {
   const [watchlists, setWatchlists] = useState<Watchlist[]>([]);
   const [newWatchlist, setNewWatchlist] = useState<string>('');
+  const navigate = useNavigate();
 
+  // Vérification si l'utilisateur est authentifié
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/auth'); // Redirige vers la page de connexion si pas de token
+    } else {
+      fetchWatchlists();
+    }
+  }, [navigate]);
+
+  // Récupérer les watchlists
   const fetchWatchlists = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -24,7 +36,13 @@ const Watchlists: React.FC = () => {
     }
   };
 
+  // Ajouter une nouvelle watchlist
   const createWatchlist = async () => {
+    if (!newWatchlist.trim()) {
+      alert('Veuillez entrer un nom de watchlist valide.');
+      return;
+    }
+
     try {
       const token = localStorage.getItem('token');
       await axios.post(
@@ -38,10 +56,6 @@ const Watchlists: React.FC = () => {
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    fetchWatchlists();
-  }, []);
 
   return (
     <div className="p-4">
